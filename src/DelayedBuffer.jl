@@ -19,14 +19,14 @@ function getindex(x::DelayedBuffer, i::Integer)
     rr = (i-1)*x.w_inc+x.w_len-x.delay
     if ll < 1 # accessing delay indexes
         x.z[1:abs(ll)+1] = 0
-        x.z[abs(ll)+2:end] = x.data[1:rr]
+        x.z[abs(ll)+2:end] = sub(x.data,1:rr)
     elseif ll > length(x.data)-x.delay
         error("BoundsError")
     elseif rr > length(x.data)
-        x.z[1:length(x.data)-ll+1] = x.data[ll:end]
+        x.z[1:length(x.data)-ll+1] = sub(x.data,ll:end)
         x.z[length(x.data)-ll+2:end] = 0
     else
-        x.z = x.data[ll:rr]
+        return sub(x.data,ll:rr)
     end
     return x.z
 end
